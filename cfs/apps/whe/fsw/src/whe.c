@@ -301,7 +301,7 @@ void WHE_UpdateObs()
 {
 	if(WHE_Info.sbc_state == SBC_OBSERVING)
 	{
-		WHE_Info.temp += .1;
+		WHE_Info.temp += .4;
 
 		if(WHE_Info.act_cap == CAP_A)
 		{
@@ -329,8 +329,14 @@ void WHE_UpdateObs()
 			WHE_Info.sbc_state = SBC_POWERED;
 		}
 
+		// Bad temp, abort observation.
+		if(WHE_Info.temp > 20)
+		{
+			WHE_Info.sbc_state = SBC_POWERED;
+		}
+
 		// Dangerous temp. Abort observation.
-		if(WHE_Info.temp > 30)
+		if(WHE_Info.temp > 35)
 		{
 			WHE_Damage();
 		}
@@ -362,9 +368,9 @@ void WHE_UpdateTherm()
 	{
 		diff = 0 - WHE_Info.temp;
 	}
-	else if (WHE_Info.temp > 30)
+	else if (WHE_Info.temp > 35)
 	{
-		diff = WHE_Info.temp - 30;
+		diff = WHE_Info.temp - 35;
 	}
 	else
 	{
@@ -405,22 +411,13 @@ void WHE_UpdateCap(cap_t *cap, cap_t *other_cap)
 		return;
 	}
 
-	if(WHE_Info.sbc_state == SBC_OBSERVING)
+/*	if(WHE_Info.sbc_state == SBC_OBSERVING)
 	{
-	   if(WHE_Info.act_cap == CAP_A)
-	   {
-		/*EJB   if(WHE_Info.cap_a.charge <= 5)
-		   {
-			   WHE_Destroy();
-		   }
-		   else if(WHE_Info.cap_b.charge <= 5)
-		   {
-			   WHE_Destroy();
-		   }*/
-	   }
+	   
 	   WHE_Info.temp += .5;
 	}
 
+*/
 	val = rand() % 100;
 
 	if((cap->state == CAP_DISCHARGING) && (other_cap->state == CAP_DISCHARGING))
